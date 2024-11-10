@@ -1,34 +1,44 @@
 #include "func.c"
 
-
-typedef char *string;
 typedef struct node {
-	string word;
+	char word[20];
 	struct node *next;
 }node;
 
 void free_array(node *array) {
-	node *ptr = array;
-	while(ptr != NULL) {
-		//let array be poiting to the next node. This detach the first node from the rest and saves its address in ptr
-		array = ptr->next;
-		free(ptr->word);
-		free(ptr);
-		ptr = array;
-	}
+        node *ptr = array;
+        while(ptr != NULL) {
+                array = ptr->next;
+                free(ptr);
+                ptr = array;
+        }
 }
 
 void print_array(node *array) {
-	node *ptr = array;
-	while(ptr != NULL) {
-		printf("%p: %s\n", ptr, ptr->word);
-		ptr = ptr->next;
+	printf("\n");
+	printf("\n");
+	printf("Heap Memory Layout\n");
+	for(int i = 0; i < 10; i++) {
+		printf("__");
+	}
+	printf("\n");
+	printf("\n");
+
+	printf("Address\t\t| Value\n");
+	for(int i = 0; i < 10; i++) {
+		printf("__");
+	}
+
+	printf("\n");
+
+	for(node *ptr = array->next; ptr != NULL; ptr = ptr->next) {
+		// Let array be pointing to the next node.
+		printf("%p\t| %s\n", ptr, ptr->word);
 	}
 }
 
 int main() {
-	int array_len = get_int("enter array length: ");
-	printf("%d\n", array_len);
+	int array_len = get_int("Enter array length: ");
 	if(array_len < 1) {
 		printf("Length can`t be less than 1\n");
 		exit(1);
@@ -37,22 +47,28 @@ int main() {
 	if(array == NULL){
 		exit(1);
 	}
-
+	// this is for appennding to the array.
+	array->next = NULL;
+	// ptrr should always be set to the last node of the array.
+	node *ptrr = array;
 	for(int i = 0; i < array_len; i++) {
-		if(i == 0){
-			array->word = get_string("Enter word: ");
-			array->next = NULL;
-			continue;
-		}
+		// new node called ptr.
 		node *ptr = malloc(sizeof(node));
 		if(ptr == NULL) {
 			free(array);
 		}
 
-		ptr->word = get_string("Enter word: ");
-		ptr->next = array;
-		array = ptr;
+		printf("Enter word: ");
+		// // read the word from the user.
+		scanf("%s", ptr->word);
+		// set the next pointer of ptr to NULL.
+		ptr->next = NULL;
+		// set the next pointer of ptrr to ptr.
+		ptrr->next = ptr;
+		// set the ptrr to ptr because ptr is the last node of the array.
+		ptrr = ptr;
 	}
 	print_array(array);
+	free_array(array);
 	return (0);
 }

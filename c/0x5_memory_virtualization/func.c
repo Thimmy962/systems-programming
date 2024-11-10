@@ -4,6 +4,8 @@
 #include <string.h>
 #include <stdbool.h>
 
+
+typedef char *string;
 int get_int(char *prompt)
 {
 
