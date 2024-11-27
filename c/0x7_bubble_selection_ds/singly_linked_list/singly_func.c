@@ -80,10 +80,10 @@ void delete_node(Node **head, int position) {
 
 
 /**
- * preppend - adds a new node at the beginning of the linked list
+ * prepend - adds a new node at the beginning of the linked list
  * @head: pointer to the head of the linked list
  */
-void preppend(Node **head, int value) {
+void prepend(Node **head, int value) {
     Node *ptr = malloc(sizeof(Node));
     if(ptr == NULL) {
         printf("Memory allocation failed\n");
