@@ -10,7 +10,7 @@
 */
 bool checkbit(int num, int pos)
 {
-	if(pos > sizeof(int) || pos < 1)
+	if(pos > sizeof(int) * 8 || pos < 1)
 	{
 		printf("Postion can only be between 1 and %ld\n", sizeof(int) * 8);
 		exit(1);
