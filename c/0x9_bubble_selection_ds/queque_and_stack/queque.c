@@ -16,7 +16,7 @@ Node *rear = NULL;
  * isEmpty - checks if the queque is empty
  */
 int isEmpty() {
-    if(front == NULL) {
+    if(front == NUL || rear == NULL) {
         return 1;
     }
     return 0;
@@ -64,11 +64,11 @@ void display() {
 
 
 /**
- * dequeque - removes a node from a queque
+ * dequeque - removes a node from the front of a queque
  */
 void dequeque() {
     if(isEmpty() == 1) {
-        printf("List is empty\n");
+        printf("Queue is empty\n");
         return;
     }
 
