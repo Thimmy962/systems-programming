@@ -12,11 +12,12 @@ typedef struct node {
 Node *front = NULL;
 Node *rear = NULL;
 
+int used = 0;
+
 /**
  * isEmpty - checks if the queque is empty
  */
-int isEmpty() {
-    if(front == NUL || rear == NULL) {
+int isEmpty() { if(front == NULL || rear == NULL) {
         return 1;
     }
     return 0;
@@ -39,6 +40,7 @@ void enqueque(int data) {
     if(isEmpty() == 1) {
         front = new_node;
         rear = new_node;
+        used = 1;
         return;
     }
 
@@ -66,17 +68,17 @@ void display() {
 /**
  * dequeque - removes a node from the front of a queque
  */
-void dequeque() {
+void dequeue_without_return() {
     if(isEmpty() == 1) {
         printf("Queue is empty\n");
-        return;
+        return ;
     }
 
     Node *tmp = front;
     front = front->next;
-
     tmp->next = NULL;
     free(tmp);
+    printf("Dequed\n");
 }
 
 
@@ -84,8 +86,51 @@ void dequeque() {
  * free_queque - free all the nodes in a queque
  */
 
-void free_queque() {
+void free_queue() {
     while(front != NULL) {
-        dequeque();
+        dequeue_without_return();
     }
+}
+
+
+int get_front(int *val) {
+    if(used == 0) {
+        return 1;
+    }
+    Node *tmp = front;
+    *val = tmp->data;
+    return 0;
+}
+
+void peek() {
+    if(front == NULL) {
+        printf("Queue is Empty\n");
+        return;
+    }
+    Node *tmp = front;
+    int data = tmp->data;
+    printf("%d\n", data);
+    return;
+}
+
+/**
+ * dequeue - removes a node from the front of a queue and returns its value
+ * @return: the data of the removed node or a special value if the queue is empty
+ */
+int dequeue(int *val) {
+    if(front == NULL) {
+        printf("Queue is empty\n");
+        return 1; // Indicate failure due to empty queue
+    }
+
+    Node *tmp = front;
+    *val = tmp->data; // Get the data from the front node
+    front = front->next; // Move the front pointer to the next node
+
+    if (front == NULL) { // If the queue is now empty, reset the rear pointer
+        rear = NULL;
+    }
+    free(tmp); // Free the memory of the dequeued node
+    printf("Dequed\n");
+    return 0; // Indicate success
 }

@@ -7,7 +7,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
-char *mqn = "/mqn";
+char *mqname = "/mqn";
 char *message = "Hello to you, my name is Dada Oluwatimileyin Olayemi";
 
 int send_message(mqd_t mq) {
@@ -59,7 +59,7 @@ int main() {
         .mq_curmsgs = 0
     };
 
-    mqd_t mq = mq_open(mqn, O_CREAT | O_RDWR, S_IRUSR | S_IWUSR, &attr);
+    mqd_t mq = mq_open(mqname, O_CREAT | O_RDWR, S_IRUSR | S_IWUSR, &attr);
     if (mq == (mqd_t)-1) {
         perror("Error creating message queue");
         exit(EXIT_FAILURE);
@@ -69,36 +69,35 @@ int main() {
     if (pid == -1) {
         perror("Fork error");
         mq_close(mq);
-        mq_unlink(mqn);
+        mq_unlink(mqname);
         exit(EXIT_FAILURE);
     }
 
     if (pid == 0) {
         // Child process
-        mqd_t child_mq = mq_open(mqn, O_RDONLY);
+        mqd_t child_mq = mq_open(mqname, O_RDONLY);
         if (child_mq == (mqd_t)-1) {
             perror("Child failed to open queue");
             exit(EXIT_FAILURE);
         }
 
         if (receive_message(child_mq) == -1) {
-                mq_close(child_mq);
-                mq_unlink(mqn);
-                exit(EXIT_FAILURE);
-            }
-
             mq_close(child_mq);
-    } else {
-        if (send_message(mq) == -1) {
-            mq_close(mq);
-            mq_unlink(mqn);
+            mq_unlink(mqname);
             exit(EXIT_FAILURE);
         }
-
+            mq_close(child_mq);
+    } else {
+        mqd_t parent_mq = mq_open(mqname, O_WRONLY);
+        if(send_message(parent_mq) == -1) {
+            mq_close(mq);
+            mq_unlink(mqname);
+            exit(EXIT_FAILURE);
+        }
         wait(NULL); // Wait for child process to finish
     }
 
     mq_close(mq);
-    mq_unlink(mqn); // Cleanup message queue
+    mq_unlink(mqname); // Cleanup message queue
     return 0;
 }

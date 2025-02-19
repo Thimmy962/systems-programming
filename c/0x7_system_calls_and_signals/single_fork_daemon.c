@@ -37,7 +37,7 @@ int main() {
 
     int fd = open("hello.txt", O_CREAT | O_WRONLY | O_APPEND, 0666);
     char *name = "My name is Timileyin\n";
-    if(fd == 0) {
+    if(fd == -1) {
         int err = open("/var/log/daemon.log", O_APPEND);
         char *mes = "Could not open hello.txt file in the home directory\n";
         write(err, mes, strlen(mes));
@@ -60,5 +60,4 @@ int main() {
         write(fd, name, strlen(name));
     }
     close(fd);
-            
 }
